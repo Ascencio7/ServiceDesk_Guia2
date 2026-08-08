@@ -1,0 +1,5 @@
+sv\edu\itca\servicedesk360\controller\CerrarSesionServlet.class
+sv\edu\itca\servicedesk360\controller\RegistroServlet.class
+sv\edu\itca\servicedesk360\controller\PanelServlet.class
+sv\edu\itca\servicedesk360\controller\AccesoServlet.class
+sv\edu\itca\servicedesk360\controller\DiagnosticoServlet.class
