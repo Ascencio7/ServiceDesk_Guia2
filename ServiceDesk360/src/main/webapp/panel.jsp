@@ -1,6 +1,5 @@
 <%-- 
-    Document   : index
-    Created on : 08 aug 2026, 2:31:12 p. m.
+    Document   : panel
     Author     : Vladimir Ascencio
 --%>
 
@@ -43,9 +42,11 @@
                                 <i class="bi bi-person-fill fs-5"></i>
                             </div>
                             <div class="d-flex flex-column leading-tight">
-                                <span class="fw-semibold small"><c:out value="${sessionScope.usuarioNombre}" default="Usuario" /></span>
+                                <span class="fw-semibold small">
+                                    <c:out value="${sessionScope.usuarioAutenticado.nombreCompleto}" default="Usuario" />
+                                </span>
                                 <span class="badge bg-light text-primary border text-capitalize align-self-start" style="font-size: 0.7rem;">
-                                    <c:out value="${sessionScope.usuarioRolDescripcion}" default="Soporte" />
+                                    <c:out value="${sessionScope.usuarioAutenticado.rol}" default="Soporte" />
                                 </span>
                             </div>
                         </div>
@@ -73,12 +74,12 @@
                             <i class="bi bi-speedometer2 me-1"></i> Panel General
                         </span>
                         <h1 class="h2 fw-bold text-dark mb-2">
-                            ¡Bienvenido, <c:out value="${sessionScope.usuarioNombre}" />!
+                            Bienvenido, <c:out value="${sessionScope.usuarioAutenticado.nombreCompleto}" />!
                         </h1>
                         <p class="text-secondary mb-0">
-                            <i class="bi bi-envelope me-1"></i> <c:out value="${sessionScope.usuarioCorreo}" />
+                            Correo: <c:out value="${sessionScope.usuarioAutenticado.correo}" />
                             <span class="mx-2">•</span>
-                            <i class="bi bi-shield-check me-1"></i> Rol: <strong><c:out value="${sessionScope.usuarioRolDescripcion}" /></strong>
+                            <i class="bi bi-shield-check me-1"></i> Rol: <strong><c:out value="${sessionScope.usuarioAutenticado.rol}" /></strong>
                         </p>
                     </div>
                     <div class="col-md-4 text-center text-md-end d-none d-md-block">
