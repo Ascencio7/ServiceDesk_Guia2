@@ -10,6 +10,8 @@ import sv.edu.itca.servicedesk360.service.ValidadorRegistro;
 import sv.edu.itca.servicedesk360.service.ServicioRegistro;
 import sv.edu.itca.servicedesk360.service.ServicioAutenticacion;
 import sv.edu.itca.servicedesk360.service.Autenticador;
+import sv.edu.itca.servicedesk360.service.ServicioTickets;
+import sv.edu.itca.servicedesk360.storage.DirectorioTicketsEnMemoria;
 
 @WebListener
 public class AplicacionListener implements ServletContextListener {
@@ -33,9 +35,14 @@ public class AplicacionListener implements ServletContextListener {
         
         Autenticador autenticador = new ServicioAutenticacion(directorio);
 
+        DirectorioTicketsEnMemoria directorioTickets = new DirectorioTicketsEnMemoria();
+        ServicioTickets servicioTickets = new ServicioTickets(
+            directorioTickets, directorioTickets);
+
         // 4. Registrar los servicios en el contexto global de la aplicación
         context.setAttribute("servicioRegistro", servicioRegistro);
         context.setAttribute("autenticador", autenticador);
+        context.setAttribute("servicioTickets", servicioTickets);
     }
 
     @Override

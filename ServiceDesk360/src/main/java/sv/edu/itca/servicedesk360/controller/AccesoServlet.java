@@ -5,12 +5,6 @@
 package sv.edu.itca.servicedesk360.controller;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.util.Base64;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -19,6 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.Optional;
+import sv.edu.itca.servicedesk360.model.Usuario;
+import sv.edu.itca.servicedesk360.service.Autenticador;
 
 /**
  *
@@ -70,13 +67,11 @@ public class AccesoServlet extends HttpServlet {
         String correo = normalizar(request.getParameter("correo")).toLowerCase(); 
         String clave = valorSeguro(request.getParameter("clave")); 
  
-        Map<String, Map<String, String>> usuarios = obtenerUsuarios(); 
-        Map<String, String> datosUsuario = usuarios.get(correo); 
- 
-        boolean credencialesValidas = datosUsuario != null 
-                && datosUsuario.get("hash").equals(generarHash(clave)); 
- 
-        if (!credencialesValidas) { 
+        Autenticador autenticador = (Autenticador) getServletContext()
+            .getAttribute("autenticador");
+        Optional<Usuario> usuarioAutenticado = autenticador.autenticar(correo, clave);
+
+        if (!usuarioAutenticado.isPresent()) {
             request.setAttribute("mensajeError", 
                     "Correo o contraseña incorrectos."); 
             request.getRequestDispatcher("/login.jsp") 
@@ -90,11 +85,13 @@ public class AccesoServlet extends HttpServlet {
         } 
  
         HttpSession sesion = request.getSession(true); 
-        sesion.setAttribute("usuarioNombre", datosUsuario.get("nombre")); 
-        sesion.setAttribute("usuarioCorreo", correo); 
-        sesion.setAttribute("usuarioRol", datosUsuario.get("rol")); 
+        Usuario usuario = usuarioAutenticado.get();
+        sesion.setAttribute("usuarioAutenticado", usuario);
+        sesion.setAttribute("usuarioNombre", usuario.getNombreCompleto());
+        sesion.setAttribute("usuarioCorreo", usuario.getCorreo());
+        sesion.setAttribute("usuarioRol", usuario.getRol());
         sesion.setAttribute("usuarioRolDescripcion", 
-                describirRol(datosUsuario.get("rol"))); 
+            describirRol(usuario.getRol().name()));
         sesion.setMaxInactiveInterval(15 * 60); 
  
         if ("si".equals(request.getParameter("recordar"))) { 
@@ -163,31 +160,4 @@ public class AccesoServlet extends HttpServlet {
         return valor == null ? "" : valor; 
     } 
  
-    private String generarHash(String valor) { 
-        try { 
-            MessageDigest digest = MessageDigest.getInstance("SHA-256"); 
-            byte[] bytes = digest.digest( 
-                    valor.getBytes(StandardCharsets.UTF_8)); 
-            return Base64.getEncoder().encodeToString(bytes); 
-        } catch (NoSuchAlgorithmException ex) { 
-            throw new IllegalStateException( 
-                    "No fue posible procesar la contraseña.", ex); 
-        } 
-    } 
- 
-    @SuppressWarnings("unchecked") 
-    private Map<String, Map<String, String>> obtenerUsuarios() { 
-        Object existente = getServletContext().getAttribute("usuarios"); 
-        if (existente == null) { 
-            synchronized (getServletContext()) { 
-                existente = getServletContext().getAttribute("usuarios"); 
-                if (existente == null) { 
-                    existente = new ConcurrentHashMap<String, 
-                            Map<String, String>>(); 
-                    getServletContext().setAttribute("usuarios", existente); 
-                } 
-            } 
-        } 
-        return (Map<String, Map<String, String>>) existente; 
-    } 
 } 

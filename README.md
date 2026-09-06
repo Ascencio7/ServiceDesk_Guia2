@@ -88,3 +88,48 @@ servicedesk360/
 │           ├── registro.jsp           # Formulario de alta de usuario
 │           └── panel.jsp              # Dashboard del sistema
 └── pom.xml                            # Configuración de dependencias Maven
+```
+
+## Guía 4: MVC con Servlets
+
+El flujo principal usa Servlets como controladores, servicios para las reglas del
+caso de uso y vistas JSP internas en `WEB-INF/views`.
+
+### Rutas
+
+| Ruta | Método | Controlador | Protección | Resultado |
+| --- | --- | --- | --- | --- |
+| `/acceso` | GET/POST | `AccesoServlet` | No | Login y redirect a `/panel` |
+| `/registro` | GET/POST | `RegistroServlet` | No | Alta mediante `ServicioRegistro` |
+| `/panel` | GET | `PanelServlet` | Sí | Vista interna del panel |
+| `/tickets` | GET | `TicketListadoServlet` | Sí | Listado mediante `ServicioTickets` |
+| `/tickets/nuevo` | GET/POST | `TicketNuevoServlet` | Sí | Formulario o redirect PRG |
+| `/cerrar-sesion` | POST | `CerrarSesionServlet` | Sí | Invalida sesión y redirige a acceso |
+
+`AutenticacionFilter` comprueba `usuarioAutenticado` en la sesión. Los contratos
+`BuscadorTickets` y `RegistradorTickets` permiten sustituir el almacenamiento en
+memoria por JDBC/MySQL en la siguiente guía. Los POST exitosos aplican
+Post/Redirect/Get; los errores usan `forward` y conservan los datos del formulario.
+
+### Diagrama de secuencia
+
+```mermaid
+sequenceDiagram
+  actor Usuario
+  participant Filtro as AutenticacionFilter
+  participant Servlet as TicketNuevoServlet
+  participant Servicio as ServicioTickets
+  participant Memoria as DirectorioTicketsEnMemoria
+  Usuario->>Filtro: POST /tickets/nuevo
+  Filtro->>Servlet: sesión válida
+  Servlet->>Servicio: crear(usuario, datos)
+  Servicio->>Memoria: siguienteId y guardar
+  Servlet-->>Usuario: redirect /tickets?estado=creado
+```
+
+### Pruebas documentadas
+
+Se deben verificar: compilación Maven, acceso anónimo bloqueado, GET del formulario,
+validación de título/descripción/prioridad, creación válida, PRG sin duplicados,
+escape de texto mediante `c:out`, cierre de sesión y pérdida esperada de tickets al
+reiniciar Tomcat. El detalle de la bitácora está en `docs/bitacora_guia4.md`.

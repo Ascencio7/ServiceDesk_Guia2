@@ -26,14 +26,14 @@ public class PanelServlet extends HttpServlet {
  
         HttpSession sesion = request.getSession(false); 
  
-        if (sesion == null 
-                || sesion.getAttribute("usuarioCorreo") == null) { 
+        if (sesion == null
+            || sesion.getAttribute("usuarioAutenticado") == null) {
             response.sendRedirect( 
                     request.getContextPath() + "/acceso?estado=sesion"); 
             return; 
         } 
  
-        request.getRequestDispatcher("/panel.jsp") 
+        request.getRequestDispatcher("/WEB-INF/views/panel.jsp")
                .forward(request, response); 
     } 
 }
