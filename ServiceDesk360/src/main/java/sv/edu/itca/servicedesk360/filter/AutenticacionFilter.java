@@ -1,6 +1,7 @@
 package sv.edu.itca.servicedesk360.filter;
 
 import java.io.IOException;
+
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 @WebFilter(urlPatterns = {"/panel", "/tickets", "/tickets/*", "/cerrar-sesion"})
 public class AutenticacionFilter implements Filter {
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response,
             FilterChain chain) throws IOException, ServletException {

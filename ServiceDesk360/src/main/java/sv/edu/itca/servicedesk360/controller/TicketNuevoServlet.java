@@ -2,17 +2,20 @@ package sv.edu.itca.servicedesk360.controller;
 
 import java.io.IOException;
 import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import sv.edu.itca.servicedesk360.model.Usuario;
 import sv.edu.itca.servicedesk360.service.ServicioTickets;
 
 @WebServlet("/tickets/nuevo")
 public class TicketNuevoServlet extends HttpServlet {
+
     private ServicioTickets servicio() {
         return (ServicioTickets) getServletContext().getAttribute("servicioTickets");
     }

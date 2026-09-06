@@ -2,6 +2,7 @@ package sv.edu.itca.servicedesk360.service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import sv.edu.itca.servicedesk360.model.PrioridadTicket;
 import sv.edu.itca.servicedesk360.model.Solicitante;
 import sv.edu.itca.servicedesk360.model.TicketSoporte;
@@ -10,6 +11,7 @@ import sv.edu.itca.servicedesk360.storage.BuscadorTickets;
 import sv.edu.itca.servicedesk360.storage.RegistradorTickets;
 
 public class ServicioTickets {
+
     private final BuscadorTickets buscador;
     private final RegistradorTickets registrador;
 
@@ -45,7 +47,7 @@ public class ServicioTickets {
         }
 
         TicketSoporte ticket = new TicketSoporte(registrador.siguienteId(),
-            tituloLimpio, descripcionLimpia, (Solicitante) usuario, prioridad);
+                tituloLimpio, descripcionLimpia, (Solicitante) usuario, prioridad);
         registrador.guardar(ticket);
         return errores;
     }

@@ -5,9 +5,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
+
 import sv.edu.itca.servicedesk360.model.TicketSoporte;
 
 public class DirectorioTicketsEnMemoria implements BuscadorTickets, RegistradorTickets {
+
     private final List<TicketSoporte> tickets = new CopyOnWriteArrayList<>();
     private final AtomicLong secuencia = new AtomicLong();
 
