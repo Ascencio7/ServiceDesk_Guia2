@@ -133,3 +133,24 @@ Se deben verificar: compilación Maven, acceso anónimo bloqueado, GET del formu
 validación de título/descripción/prioridad, creación válida, PRG sin duplicados,
 escape de texto mediante `c:out`, cierre de sesión y pérdida esperada de tickets al
 reiniciar Tomcat. El detalle de la bitácora está en `docs/bitacora_guia4.md`.
+
+## Guía 5: JDBC con MySQL
+
+La preparación JDBC se encuentra en `ServiceDesk360/src/main/java/sv/edu/itca/servicedesk360/persistence`.
+La aplicación no contiene credenciales reales: copie `db.properties.example` a
+`%USERPROFILE%\.servicedesk360\db.properties` y cambie la contraseña local.
+
+1. Ejecute `sql/01_esquema_servicedesk360.sql` con una cuenta administrativa de MySQL.
+2. Cambie `CAMBIAR_LOCALMENTE` en el script por una contraseña local y ejecute `sql/02_datos_prueba.sql`.
+3. Ejecute `mvn clean package` desde `ServiceDesk360`.
+4. Ejecute `sv.edu.itca.servicedesk360.persistence.PruebaConexion` para comprobar conexión y metadatos.
+
+`LaboratorioJDBC` contiene las evidencias de la guía: búsqueda por correo con
+`PreparedStatement`, inserción con clave `AUTO_INCREMENT`, listado con `JOIN` y
+la operación transaccional ticket-seguimiento. Para comprobar rollback, invoque
+`registrarTicketConSeguimiento` con un `categoriaId` inexistente y confirme que
+no se creó ningún ticket ni seguimiento.
+
+La aplicación web de la guía 4 conserva temporalmente `DirectorioTicketsEnMemoria`.
+La conversión de los contratos MVC a un DAO JDBC completo, empezando por tickets,
+queda preparada para la guía 6.

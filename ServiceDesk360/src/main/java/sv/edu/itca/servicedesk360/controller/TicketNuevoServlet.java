@@ -23,6 +23,9 @@ public class TicketNuevoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        HttpSession sesion = request.getSession(false);
+        Usuario usuario = (Usuario) sesion.getAttribute("usuarioAutenticado");
+        request.setAttribute("equipos", servicio().listarEquipos(usuario));
         mostrarFormulario(request, response);
     }
 
@@ -35,13 +38,16 @@ public class TicketNuevoServlet extends HttpServlet {
         String titulo = request.getParameter("titulo");
         String descripcion = request.getParameter("descripcion");
         String prioridad = request.getParameter("prioridad");
+        Long equipoId = parsearId(request.getParameter("equipoId"));
         try {
-            List<String> errores = servicio().crear(usuario, titulo, descripcion, prioridad);
+            List<String> errores = servicio().crear(usuario, titulo, descripcion, prioridad, equipoId);
             if (!errores.isEmpty()) {
                 request.setAttribute("errores", errores);
                 request.setAttribute("tituloAnterior", titulo);
                 request.setAttribute("descripcionAnterior", descripcion);
                 request.setAttribute("prioridadAnterior", prioridad);
+                request.setAttribute("equipoAnterior", equipoId);
+                request.setAttribute("equipos", servicio().listarEquipos(usuario));
                 mostrarFormulario(request, response);
                 return;
             }
@@ -51,6 +57,11 @@ public class TicketNuevoServlet extends HttpServlet {
             request.setAttribute("mensajeError", "No fue posible registrar el ticket.");
             request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
         }
+    }
+
+    private Long parsearId(String valor) {
+        if (valor == null || valor.trim().isEmpty()) return null;
+        try { return Long.valueOf(valor); } catch (NumberFormatException ex) { return null; }
     }
 
     private void mostrarFormulario(HttpServletRequest request, HttpServletResponse response)

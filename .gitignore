@@ -2,3 +2,5 @@
 /nbproject/private/
 .DS_Store
 *.class
+db.properties
+ServiceDesk360/db.properties

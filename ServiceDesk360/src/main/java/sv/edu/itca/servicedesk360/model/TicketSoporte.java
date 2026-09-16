@@ -19,6 +19,7 @@ public class TicketSoporte {
     private final PrioridadTicket prioridad;
     private EstadoTicket estado;
     private Tecnico tecnicoAsignado;
+    private Long equipoId;
     private final LocalDateTime fechaCreacion;
     
     public TicketSoporte(long id, String titulo, String descripcion, Solicitante solicitante, PrioridadTicket prioridad){
@@ -48,6 +49,10 @@ public class TicketSoporte {
  this.estado = Objects.requireNonNull(
  nuevoEstado, "El estado es obligatorio.");
  }
+ public void seleccionarEquipo(Long equipoId) {
+ this.equipoId = equipoId;
+ }
+ public Long getEquipoId() { return equipoId; }
  public long getId() { return id; }
  public String getTitulo() { return titulo; }
  public String getDescripcion() { return descripcion; }

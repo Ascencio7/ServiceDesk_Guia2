@@ -14,21 +14,26 @@
     <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
         <div>
             <h1 class="h3 mb-1">Tickets de soporte</h1>
-            <p class="text-secondary mb-0">Solicitudes registradas en la sesión de trabajo.</p>
+            <p class="text-secondary mb-0">
+                <c:choose>
+                    <c:when test="${vistaPropia}">Solicitudes que usted ha registrado.</c:when>
+                    <c:otherwise>Solicitudes registradas para atención de soporte.</c:otherwise>
+                </c:choose>
+            </p>
         </div>
         <div class="d-flex gap-2">
             <a href="${pageContext.request.contextPath}/panel" class="btn btn-outline-secondary">Panel</a>
-            <a href="${pageContext.request.contextPath}/tickets/nuevo" class="btn btn-primary">Nuevo ticket</a>
+            <a href="${pageContext.request.contextPath}/tickets/nuevo" class="btn btn-primary">Nueva solicitud</a>
         </div>
     </div>
     <c:if test="${not empty mensajeExito}"><div class="alert alert-success"><c:out value="${mensajeExito}" /></div></c:if>
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>ID</th><th>Título</th><th>Solicitante</th><th>Prioridad</th><th>Estado</th></tr></thead>
+                <thead class="table-light"><tr><th>ID</th><th>Título</th><th>Solicitante</th><th>Prioridad</th><th>Estado</th><th>Acciones</th></tr></thead>
                 <tbody>
                     <c:choose>
-                        <c:when test="${empty tickets}"><tr><td colspan="5" class="text-center text-secondary py-4">Aún no hay tickets registrados.</td></tr></c:when>
+                        <c:when test="${empty tickets}"><tr><td colspan="6" class="text-center text-secondary py-4">Aún no hay tickets registrados.</td></tr></c:when>
                         <c:otherwise>
                             <c:forEach var="ticket" items="${tickets}">
                                 <tr>
@@ -37,6 +42,24 @@
                                     <td><c:out value="${ticket.solicitante.nombreCompleto}" /></td>
                                     <td><c:out value="${ticket.prioridad}" /></td>
                                     <td><c:out value="${ticket.estado}" /></td>
+                                    <td>
+                                        <c:if test="${not vistaPropia}">
+                                            <form method="post" action="${pageContext.request.contextPath}/tickets/actualizar" class="d-inline-flex gap-1">
+                                                <input type="hidden" name="id" value="<c:out value='${ticket.id}' />">
+                                                <select name="estado" class="form-select form-select-sm">
+                                                    <option value="ABIERTO">Abierto</option>
+                                                    <option value="ASIGNADO">Asignado</option>
+                                                    <option value="EN_PROCESO">En proceso</option>
+                                                    <option value="CERRADO">Cerrado</option>
+                                                </select>
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">Actualizar</button>
+                                            </form>
+                                            <form method="post" action="${pageContext.request.contextPath}/tickets/eliminar" class="d-inline">
+                                                <input type="hidden" name="id" value="<c:out value='${ticket.id}' />">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                            </form>
+                                        </c:if>
+                                    </td>
                                 </tr>
                             </c:forEach>
                         </c:otherwise>

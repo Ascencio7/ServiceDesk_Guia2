@@ -34,6 +34,23 @@
                     <textarea id="descripcion" name="descripcion" class="form-control" rows="6" required><c:out value="${descripcionAnterior}" /></textarea>
                 </div>
                 <div class="mb-4">
+                    <label for="equipoId" class="form-label">Equipo afectado</label>
+                    <select id="equipoId" name="equipoId" class="form-select">
+                        <option value="">Sin equipo específico</option>
+                        <c:forEach var="equipo" items="${equipos}">
+                            <option value="${equipo.id}" ${equipoAnterior == equipo.id ? 'selected' : ''}><c:out value="${equipo.etiqueta}" /></option>
+                        </c:forEach>
+                    </select>
+                    <c:choose>
+                        <c:when test="${empty equipos}">
+                            <div class="form-text text-warning">No hay equipos asociados a su cuenta. Puede continuar sin seleccionar uno.</div>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="form-text">Seleccione el equipo relacionado con la incidencia, si aplica.</div>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+                <div class="mb-4">
                     <label for="prioridad" class="form-label">Prioridad</label>
                     <select id="prioridad" name="prioridad" class="form-select" required>
                         <option value="">Seleccione una prioridad</option>

@@ -1,0 +1,4 @@
+# Copiar como %USERPROFILE%\\.servicedesk360\\db.properties y cambiar la clave.
+db.url=jdbc:mysql://localhost:3306/servicedesk360_db?serverTimezone=UTC&useUnicode=true&characterEncoding=UTF-8
+db.user=servicedesk_app
+db.password=CAMBIAR_LOCALMENTE

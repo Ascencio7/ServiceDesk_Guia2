@@ -10,8 +10,8 @@ import sv.edu.itca.servicedesk360.service.ServicioAutenticacion;
 import sv.edu.itca.servicedesk360.service.ServicioRegistro;
 import sv.edu.itca.servicedesk360.service.ServicioTickets;
 import sv.edu.itca.servicedesk360.service.ValidadorRegistro;
-import sv.edu.itca.servicedesk360.storage.DirectorioCuentasEnMemoria;
-import sv.edu.itca.servicedesk360.storage.DirectorioTicketsEnMemoria;
+import sv.edu.itca.servicedesk360.storage.DirectorioCuentasJDBC;
+import sv.edu.itca.servicedesk360.storage.DirectorioTicketsJDBC;
 
 @WebListener
 public class AplicacionListener implements ServletContextListener {
@@ -21,7 +21,7 @@ public class AplicacionListener implements ServletContextListener {
         ServletContext context = sce.getServletContext();
 
         // 1. Instanciar el almacenamiento (implementa BuscadorCuentas y RegistradorCuentas)
-        DirectorioCuentasEnMemoria directorio = new DirectorioCuentasEnMemoria();
+        DirectorioCuentasJDBC directorio = new DirectorioCuentasJDBC();
 
         // 2. Instanciar el validador
         ValidadorRegistro validador = new ValidadorRegistro();
@@ -35,7 +35,7 @@ public class AplicacionListener implements ServletContextListener {
 
         Autenticador autenticador = new ServicioAutenticacion(directorio);
 
-        DirectorioTicketsEnMemoria directorioTickets = new DirectorioTicketsEnMemoria();
+        DirectorioTicketsJDBC directorioTickets = new DirectorioTicketsJDBC();
         ServicioTickets servicioTickets = new ServicioTickets(
                 directorioTickets, directorioTickets);
 
