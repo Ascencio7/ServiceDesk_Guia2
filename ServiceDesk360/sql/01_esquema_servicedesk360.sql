@@ -12,3 +12,9 @@ CREATE TABLE IF NOT EXISTS tecnicos (id_tecnico BIGINT PRIMARY KEY AUTO_INCREMEN
 CREATE TABLE IF NOT EXISTS categorias (id_categoria BIGINT PRIMARY KEY AUTO_INCREMENT, nombre VARCHAR(80) NOT NULL UNIQUE);
 CREATE TABLE IF NOT EXISTS tickets (id_ticket BIGINT PRIMARY KEY AUTO_INCREMENT, id_cliente BIGINT NOT NULL, id_equipo BIGINT NULL, id_tecnico BIGINT NULL, id_categoria BIGINT NOT NULL, titulo VARCHAR(150) NOT NULL, descripcion VARCHAR(1000) NOT NULL, prioridad VARCHAR(20) NOT NULL, estado VARCHAR(20) NOT NULL DEFAULT 'ABIERTO', fecha_creacion TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_ticket_cliente FOREIGN KEY (id_cliente) REFERENCES clientes(id_cliente), CONSTRAINT fk_ticket_equipo FOREIGN KEY (id_equipo) REFERENCES equipos(id_equipo), CONSTRAINT fk_ticket_tecnico FOREIGN KEY (id_tecnico) REFERENCES tecnicos(id_tecnico), CONSTRAINT fk_ticket_categoria FOREIGN KEY (id_categoria) REFERENCES categorias(id_categoria), CONSTRAINT chk_ticket_prioridad CHECK (prioridad IN ('BAJA','MEDIA','ALTA','CRITICA')), CONSTRAINT chk_ticket_estado CHECK (estado IN ('ABIERTO','ASIGNADO','EN_PROCESO','CERRADO')));
 CREATE TABLE IF NOT EXISTS seguimientos (id_seguimiento BIGINT PRIMARY KEY AUTO_INCREMENT, id_ticket BIGINT NOT NULL, detalle VARCHAR(800) NOT NULL, fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, CONSTRAINT fk_seguimiento_ticket FOREIGN KEY (id_ticket) REFERENCES tickets(id_ticket));
+
+CREATE INDEX idx_equipos_cliente ON equipos(id_cliente);
+CREATE INDEX idx_tickets_estado ON tickets(estado);
+CREATE INDEX idx_tickets_prioridad ON tickets(prioridad);
+CREATE INDEX idx_tickets_tecnico ON tickets(id_tecnico);
+CREATE INDEX idx_seguimientos_ticket ON seguimientos(id_ticket);

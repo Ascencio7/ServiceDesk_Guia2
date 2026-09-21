@@ -1,6 +1,7 @@
 package sv.edu.itca.servicedesk360.controller;
 
 import java.io.IOException;
+import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import sv.edu.itca.servicedesk360.model.TicketDetalleDTO;
 import sv.edu.itca.servicedesk360.model.Usuario;
 import sv.edu.itca.servicedesk360.service.ServicioTickets;
 
@@ -24,6 +26,15 @@ public class TicketListadoServlet extends HttpServlet {
         try {
             Usuario usuario = (Usuario) request.getSession(false)
                 .getAttribute("usuarioAutenticado");
+            String estado = request.getParameter("estadoFiltro");
+            String prioridad = request.getParameter("prioridadFiltro");
+            int pagina = parsearPagina(request.getParameter("pagina"));
+            List<TicketDetalleDTO> detalle = servicio().listarDetalle(estado, prioridad, pagina, 10);
+            request.setAttribute("ticketsDetalle", detalle);
+            request.setAttribute("totalPaginas", (int) Math.ceil(servicio().contarDetalle(estado, prioridad) / 10.0));
+            request.setAttribute("paginaActual", pagina);
+            request.setAttribute("estadoFiltro", estado);
+            request.setAttribute("prioridadFiltro", prioridad);
             request.setAttribute("tickets", servicio().listarPara(usuario));
             request.setAttribute("vistaPropia", usuario.getRol().name().equals("SOLICITANTE"));
             if ("creado".equals(request.getParameter("estado"))) {
@@ -45,6 +56,11 @@ public class TicketListadoServlet extends HttpServlet {
                     + ": " + causa.getMessage());
             mostrarError(request, response);
         }
+    }
+
+    private int parsearPagina(String valor) {
+        try { return Math.max(1, Integer.parseInt(valor == null ? "1" : valor)); }
+        catch (NumberFormatException ex) { return 1; }
     }
 
     private void mostrarError(HttpServletRequest request, HttpServletResponse response)

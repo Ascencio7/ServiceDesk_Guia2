@@ -15,7 +15,7 @@
         <div class="col-lg-8">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="h3 mb-0">Registrar ticket de soporte</h1>
-                <a href="${pageContext.request.contextPath}/tickets" class="btn btn-outline-secondary">Volver</a>
+                <a href="${pageContext.request.contextPath}/panel" class="btn btn-outline-secondary">Volver al panel</a>
             </div>
             <c:if test="${not empty errores}">
                 <div class="alert alert-danger" role="alert">
@@ -29,26 +29,45 @@
                     <label for="titulo" class="form-label">Título</label>
                     <input id="titulo" name="titulo" class="form-control" maxlength="100" required value="<c:out value='${tituloAnterior}' />">
                 </div>
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="clienteId" class="form-label">Cliente</label>
+                        <select id="clienteId" name="clienteId" class="form-select" required>
+                            <option value="">Seleccione un cliente</option>
+                            <c:forEach var="cliente" items="${clientes}">
+                                <option value="${cliente.id}" ${clienteAnterior == cliente.id ? 'selected' : ''}><c:out value="${cliente.nombre}" /></option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="equipoId" class="form-label">Equipo afectado</label>
+                        <select id="equipoId" name="equipoId" class="form-select" required>
+                            <option value="">Seleccione un equipo</option>
+                            <c:forEach var="equipo" items="${equipos}">
+                                <option value="${equipo.id}" ${equipoAnterior == equipo.id ? 'selected' : ''}><c:out value="${equipo.nombre}" /></option>
+                            </c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="categoriaId" class="form-label">Categoría</label>
+                        <select id="categoriaId" name="categoriaId" class="form-select" required>
+                            <c:forEach var="categoria" items="${categorias}"><option value="${categoria.id}" ${categoriaAnterior == categoria.id ? 'selected' : ''}><c:out value="${categoria.nombre}" /></option></c:forEach>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label for="tecnicoId" class="form-label">Técnico responsable</label>
+                        <select id="tecnicoId" name="tecnicoId" class="form-select" required>
+                            <c:forEach var="tecnico" items="${tecnicos}"><option value="${tecnico.id}" ${tecnicoAnterior == tecnico.id ? 'selected' : ''}><c:out value="${tecnico.nombre}" /></option></c:forEach>
+                        </select>
+                    </div>
+                </div>
                 <div class="mb-3">
                     <label for="descripcion" class="form-label">Descripción</label>
                     <textarea id="descripcion" name="descripcion" class="form-control" rows="6" required><c:out value="${descripcionAnterior}" /></textarea>
                 </div>
                 <div class="mb-4">
-                    <label for="equipoId" class="form-label">Equipo afectado</label>
-                    <select id="equipoId" name="equipoId" class="form-select">
-                        <option value="">Sin equipo específico</option>
-                        <c:forEach var="equipo" items="${equipos}">
-                            <option value="${equipo.id}" ${equipoAnterior == equipo.id ? 'selected' : ''}><c:out value="${equipo.etiqueta}" /></option>
-                        </c:forEach>
-                    </select>
-                    <c:choose>
-                        <c:when test="${empty equipos}">
-                            <div class="form-text text-warning">No hay equipos asociados a su cuenta. Puede continuar sin seleccionar uno.</div>
-                        </c:when>
-                        <c:otherwise>
-                            <div class="form-text">Seleccione el equipo relacionado con la incidencia, si aplica.</div>
-                        </c:otherwise>
-                    </c:choose>
+                    <label for="detalleInicial" class="form-label">Seguimiento inicial</label>
+                    <textarea id="detalleInicial" name="detalleInicial" class="form-control" rows="3" required><c:out value="${detalleInicialAnterior}" /></textarea>
                 </div>
                 <div class="mb-4">
                     <label for="prioridad" class="form-label">Prioridad</label>

@@ -5,11 +5,14 @@ sv\edu\itca\servicedesk360\storage\DirectorioTicketsEnMemoria.class
 sv\edu\itca\servicedesk360\controller\AccesoServlet.class
 sv\edu\itca\servicedesk360\controller\TicketListadoServlet.class
 sv\edu\itca\servicedesk360\storage\DirectorioCuentasJDBC.class
+sv\edu\itca\servicedesk360\model\Seguimiento.class
 sv\edu\itca\servicedesk360\service\ServicioTickets.class
 sv\edu\itca\servicedesk360\controller\PanelServlet.class
 sv\edu\itca\servicedesk360\persistence\ClienteRegistro.class
+sv\edu\itca\servicedesk360\storage\TicketDAO.class
 sv\edu\itca\servicedesk360\controller\EquipoNuevoServlet.class
 sv\edu\itca\servicedesk360\model\EstadoTicket.class
+sv\edu\itca\servicedesk360\model\TicketDetalleDTO.class
 sv\edu\itca\servicedesk360\persistence\LaboratorioJDBC.class
 sv\edu\itca\servicedesk360\persistence\TicketVista.class
 sv\edu\itca\servicedesk360\service\ServicioRegistro.class
@@ -21,6 +24,7 @@ sv\edu\itca\servicedesk360\model\Tecnico.class
 sv\edu\itca\servicedesk360\model\Usuario.class
 sv\edu\itca\servicedesk360\controller\TicketNuevoServlet.class
 sv\edu\itca\servicedesk360\model\CuentaUsuario.class
+sv\edu\itca\servicedesk360\storage\EquipoDAO.class
 sv\edu\itca\servicedesk360\model\TicketSoporte.class
 sv\edu\itca\servicedesk360\storage\RegistradorTickets.class
 sv\edu\itca\servicedesk360\storage\DirectorioTicketsJDBC.class
@@ -32,6 +36,7 @@ sv\edu\itca\servicedesk360\model\Solicitante.class
 sv\edu\itca\servicedesk360\storage\BuscadorCuentas.class
 sv\edu\itca\servicedesk360\controller\TicketActualizarServlet.class
 sv\edu\itca\servicedesk360\persistence\PruebaConexion.class
+sv\edu\itca\servicedesk360\storage\OpcionCatalogo.class
 sv\edu\itca\servicedesk360\filter\AutenticacionFilter.class
 sv\edu\itca\servicedesk360\controller\CerrarSesionServlet.class
 sv\edu\itca\servicedesk360\model\RolUsuario.class
@@ -39,3 +44,4 @@ sv\edu\itca\servicedesk360\persistence\ConexionBD.class
 sv\edu\itca\servicedesk360\service\Autenticador.class
 sv\edu\itca\servicedesk360\config\AplicacionListener.class
 sv\edu\itca\servicedesk360\model\PruebaModelo.class
+sv\edu\itca\servicedesk360\storage\SeguimientoDAO.class

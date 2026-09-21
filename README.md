@@ -154,3 +154,25 @@ no se creó ningún ticket ni seguimiento.
 La aplicación web de la guía 4 conserva temporalmente `DirectorioTicketsEnMemoria`.
 La conversión de los contratos MVC a un DAO JDBC completo, empezando por tickets,
 queda preparada para la guía 6.
+
+## Guía 7: CRUD relacionado y transacciones
+
+El módulo de tickets incorpora el proceso relacionado de ServiceDesk 360: cliente,
+equipo, categoría y técnico se validan desde catálogos JDBC, y cada ticket se guarda
+junto con su seguimiento inicial en una única transacción. Un fallo en cualquiera de
+las dos inserciones ejecuta `rollback`, por lo que no quedan tickets huérfanos.
+
+El listado usa `TicketDetalleDTO` y una consulta `JOIN` parametrizada para mostrar
+datos descriptivos, con filtros GET por estado/prioridad y paginación de 10 filas.
+La actualización de estado usa el estado esperado en el `WHERE`; si otra solicitud
+ya modificó el ticket, se informa el conflicto en lugar de sobrescribirlo.
+
+Para probar la práctica:
+
+1. Ejecute `sql/01_esquema_servicedesk360.sql`, `sql/02_datos_prueba.sql` y
+  `sql/03_usuarios.sql` en MySQL.
+2. Configure `%USERPROFILE%\\.servicedesk360\\db.properties` y ejecute `mvn clean package`.
+3. Abra `/tickets/nuevo`, registre un ticket válido y revise el listado con filtros.
+4. Pruebe una relación equipo-cliente inválida y confirme que la operación es rechazada.
+5. Para rollback controlado, interrumpa el servicio entre ambos DAO en un entorno de
+  laboratorio y verifique que no aumente la cantidad de tickets.

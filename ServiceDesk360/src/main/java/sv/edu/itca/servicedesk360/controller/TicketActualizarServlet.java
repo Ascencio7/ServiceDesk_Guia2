@@ -22,7 +22,8 @@ public class TicketActualizarServlet extends HttpServlet {
             Usuario usuario = (Usuario) sesion.getAttribute("usuarioAutenticado");
             long id = Long.parseLong(request.getParameter("id"));
             String estado = request.getParameter("estado");
-            servicio(request).actualizarEstado(usuario, id, estado);
+            String esperado = request.getParameter("estadoEsperado");
+            servicio(request).actualizarEstadoOptimista(usuario, id, esperado, estado);
             response.sendRedirect(request.getContextPath() + "/tickets?estado=actualizado");
         } catch (RuntimeException ex) {
             getServletContext().log("Error al actualizar ticket", ex);

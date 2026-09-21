@@ -1,16 +1,24 @@
 package sv.edu.itca.servicedesk360.service;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import sv.edu.itca.servicedesk360.model.PrioridadTicket;
+import sv.edu.itca.servicedesk360.model.Seguimiento;
 import sv.edu.itca.servicedesk360.model.Solicitante;
+import sv.edu.itca.servicedesk360.model.TicketDetalleDTO;
 import sv.edu.itca.servicedesk360.model.TicketSoporte;
 import sv.edu.itca.servicedesk360.model.Usuario;
+import sv.edu.itca.servicedesk360.persistence.ConexionBD;
 import sv.edu.itca.servicedesk360.storage.BuscadorTickets;
 import sv.edu.itca.servicedesk360.storage.DirectorioTicketsJDBC;
 import sv.edu.itca.servicedesk360.storage.EquipoOpcion;
+import sv.edu.itca.servicedesk360.storage.OpcionCatalogo;
 import sv.edu.itca.servicedesk360.storage.RegistradorTickets;
+import sv.edu.itca.servicedesk360.storage.SeguimientoDAO;
+import sv.edu.itca.servicedesk360.storage.TicketDAO;
 
 public class ServicioTickets {
 
@@ -65,6 +73,103 @@ public class ServicioTickets {
             return new ArrayList<>();
         }
         return ((DirectorioTicketsJDBC) buscador).listarEquipos(usuario.getCorreo());
+    }
+
+    public List<OpcionCatalogo> listarClientes() {
+        return almacenamientoJDBC().listarClientesActivos();
+    }
+
+    public List<OpcionCatalogo> listarCategorias() {
+        return almacenamientoJDBC().listarCategorias();
+    }
+
+    public List<OpcionCatalogo> listarTecnicos() {
+        return almacenamientoJDBC().listarTecnicosActivos();
+    }
+
+    public List<OpcionCatalogo> listarEquiposPorCliente(long idCliente) {
+        return almacenamientoJDBC().listarEquiposPorCliente(idCliente);
+    }
+
+    public long registrarTicketConSeguimiento(long idCliente, long idEquipo, long idCategoria,
+            long idTecnico, String titulo, String descripcion, String prioridad,
+            String detalleInicial) {
+        validarRelacionado(idCliente, idEquipo, idCategoria, idTecnico, titulo,
+                descripcion, prioridad, detalleInicial);
+        DirectorioTicketsJDBC jdbc = almacenamientoJDBC();
+        if (!jdbc.existeClienteActivo(idCliente)) throw new IllegalArgumentException("El cliente no existe o esta inactivo.");
+        if (!jdbc.perteneceACliente(idEquipo, idCliente)) throw new IllegalArgumentException("El equipo seleccionado no pertenece al cliente.");
+        if (!jdbc.existeCategoria(idCategoria)) throw new IllegalArgumentException("La categoria no existe.");
+        if (!jdbc.existeTecnicoActivo(idTecnico)) throw new IllegalArgumentException("El tecnico no existe o esta inactivo.");
+
+        try (Connection cn = ConexionBD.abrir()) {
+            cn.setAutoCommit(false);
+            try {
+                long idTicket = ((TicketDAO) jdbc).registrar(cn, idCliente, idEquipo, idCategoria,
+                        idTecnico, titulo.trim(), descripcion.trim(), prioridad.toUpperCase());
+                Seguimiento seguimiento = new Seguimiento();
+                seguimiento.setIdTicket(idTicket);
+                seguimiento.setDetalle(detalleInicial.trim());
+                if (((SeguimientoDAO) jdbc).registrar(cn, seguimiento) != 1) {
+                    throw new IllegalStateException("No se registro el seguimiento inicial.");
+                }
+                cn.commit();
+                return idTicket;
+            } catch (Exception ex) {
+                try { cn.rollback(); } catch (SQLException rollback) { ex.addSuppressed(rollback); }
+                throw new IllegalStateException("La operacion fue revertida.", ex);
+            } finally {
+                try { cn.setAutoCommit(true); } catch (SQLException ignored) { }
+            }
+        } catch (SQLException ex) {
+            throw new IllegalStateException("No fue posible completar el registro del ticket.", ex);
+        }
+    }
+
+    public List<TicketDetalleDTO> listarDetalle(String estado, String prioridad, int pagina, int limite) {
+        int paginaSegura = Math.max(1, pagina);
+        int limiteSeguro = Math.max(1, limite);
+        return ((TicketDAO) almacenamientoJDBC()).listarDetalle(normalizarFiltro(estado),
+                normalizarFiltro(prioridad), limiteSeguro, (paginaSegura - 1) * limiteSeguro);
+    }
+
+    public int contarDetalle(String estado, String prioridad) {
+        return ((TicketDAO) almacenamientoJDBC()).contar(normalizarFiltro(estado), normalizarFiltro(prioridad));
+    }
+
+    public void actualizarEstadoOptimista(Usuario usuario, long ticketId, String esperado, String nuevo) {
+        comprobarSoporte(usuario);
+        validarEstado(nuevo);
+        if (!validarEstadoPermitido(esperado)) throw new IllegalArgumentException("Estado esperado no valido.");
+        if (!((TicketDAO) almacenamientoJDBC()).actualizarEstado(ticketId, esperado, nuevo)) {
+            throw new IllegalStateException("El ticket fue modificado por otra operacion. Recargue la pantalla.");
+        }
+    }
+
+    private void validarRelacionado(long cliente, long equipo, long categoria, long tecnico,
+            String titulo, String descripcion, String prioridad, String detalle) {
+        if (cliente <= 0) throw new IllegalArgumentException("Cliente requerido.");
+        if (equipo <= 0) throw new IllegalArgumentException("Equipo requerido.");
+        if (categoria <= 0) throw new IllegalArgumentException("Categoria requerida.");
+        if (tecnico <= 0) throw new IllegalArgumentException("Tecnico requerido.");
+        if (titulo == null || titulo.trim().length() < 5 || titulo.trim().length() > 120) throw new IllegalArgumentException("El titulo debe contener entre 5 y 120 caracteres.");
+        if (descripcion == null || descripcion.trim().length() < 10) throw new IllegalArgumentException("La descripcion debe contener al menos 10 caracteres.");
+        if (!"BAJA".equalsIgnoreCase(prioridad) && !"MEDIA".equalsIgnoreCase(prioridad)
+                && !"ALTA".equalsIgnoreCase(prioridad) && !"CRITICA".equalsIgnoreCase(prioridad)) throw new IllegalArgumentException("Prioridad no valida.");
+        if (detalle == null || detalle.trim().isEmpty()) throw new IllegalArgumentException("El seguimiento inicial es obligatorio.");
+    }
+
+    private String normalizarFiltro(String valor) {
+        return valor == null || valor.trim().isEmpty() ? null : valor.trim().toUpperCase();
+    }
+
+    private boolean validarEstadoPermitido(String estado) {
+        return "ABIERTO".equals(estado) || "ASIGNADO".equals(estado)
+                || "EN_PROCESO".equals(estado) || "CERRADO".equals(estado);
+    }
+
+    private void validarEstado(String estado) {
+        if (!validarEstadoPermitido(estado)) throw new IllegalArgumentException("Estado de ticket no valido.");
     }
 
     public void registrarEquipo(Usuario usuario, String codigo, String tipo,

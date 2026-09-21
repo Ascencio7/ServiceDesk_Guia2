@@ -27,25 +27,34 @@
         </div>
     </div>
     <c:if test="${not empty mensajeExito}"><div class="alert alert-success"><c:out value="${mensajeExito}" /></div></c:if>
+    <form method="get" action="${pageContext.request.contextPath}/tickets" class="row g-2 mb-4">
+        <div class="col-md-4"><select name="estadoFiltro" class="form-select"><option value="">Todos los estados</option><option value="ABIERTO" ${estadoFiltro == 'ABIERTO' ? 'selected' : ''}>Abierto</option><option value="EN_PROCESO" ${estadoFiltro == 'EN_PROCESO' ? 'selected' : ''}>En proceso</option><option value="CERRADO" ${estadoFiltro == 'CERRADO' ? 'selected' : ''}>Cerrado</option></select></div>
+        <div class="col-md-4"><select name="prioridadFiltro" class="form-select"><option value="">Todas las prioridades</option><option value="BAJA" ${prioridadFiltro == 'BAJA' ? 'selected' : ''}>Baja</option><option value="MEDIA" ${prioridadFiltro == 'MEDIA' ? 'selected' : ''}>Media</option><option value="ALTA" ${prioridadFiltro == 'ALTA' ? 'selected' : ''}>Alta</option><option value="CRITICA" ${prioridadFiltro == 'CRITICA' ? 'selected' : ''}>Crítica</option></select></div>
+        <div class="col-md-4"><button type="submit" class="btn btn-outline-primary">Filtrar</button></div>
+    </form>
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">
             <table class="table table-hover align-middle mb-0">
-                <thead class="table-light"><tr><th>ID</th><th>Título</th><th>Solicitante</th><th>Prioridad</th><th>Estado</th><th>Acciones</th></tr></thead>
+                <thead class="table-light"><tr><th>ID</th><th>Título</th><th>Cliente</th><th>Equipo</th><th>Categoría</th><th>Técnico</th><th>Prioridad</th><th>Estado</th><th>Acciones</th></tr></thead>
                 <tbody>
                     <c:choose>
-                        <c:when test="${empty tickets}"><tr><td colspan="6" class="text-center text-secondary py-4">Aún no hay tickets registrados.</td></tr></c:when>
+                        <c:when test="${empty ticketsDetalle}"><tr><td colspan="9" class="text-center text-secondary py-4">Aún no hay tickets registrados.</td></c:when>
                         <c:otherwise>
-                            <c:forEach var="ticket" items="${tickets}">
+                            <c:forEach var="ticket" items="${ticketsDetalle}">
                                 <tr>
-                                    <td><c:out value="${ticket.id}" /></td>
+                                    <td><c:out value="${ticket.idTicket}" /></td>
                                     <td><c:out value="${ticket.titulo}" /></td>
-                                    <td><c:out value="${ticket.solicitante.nombreCompleto}" /></td>
+                                    <td><c:out value="${ticket.cliente}" /></td>
+                                    <td><c:out value="${ticket.equipo}" /></td>
+                                    <td><c:out value="${ticket.categoria}" /></td>
+                                    <td><c:out value="${ticket.tecnico}" /></td>
                                     <td><c:out value="${ticket.prioridad}" /></td>
                                     <td><c:out value="${ticket.estado}" /></td>
                                     <td>
                                         <c:if test="${not vistaPropia}">
                                             <form method="post" action="${pageContext.request.contextPath}/tickets/actualizar" class="d-inline-flex gap-1">
-                                                <input type="hidden" name="id" value="<c:out value='${ticket.id}' />">
+                                                <input type="hidden" name="id" value="<c:out value='${ticket.idTicket}' />">
+                                                <input type="hidden" name="estadoEsperado" value="<c:out value='${ticket.estado}' />">
                                                 <select name="estado" class="form-select form-select-sm">
                                                     <option value="ABIERTO">Abierto</option>
                                                     <option value="ASIGNADO">Asignado</option>
@@ -55,7 +64,7 @@
                                                 <button type="submit" class="btn btn-sm btn-outline-primary">Actualizar</button>
                                             </form>
                                             <form method="post" action="${pageContext.request.contextPath}/tickets/eliminar" class="d-inline">
-                                                <input type="hidden" name="id" value="<c:out value='${ticket.id}' />">
+                                                <input type="hidden" name="id" value="<c:out value='${ticket.idTicket}' />">
                                                 <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
                                             </form>
                                         </c:if>
@@ -68,6 +77,11 @@
             </table>
         </div>
     </div>
+    <c:if test="${totalPaginas > 1}">
+        <nav class="mt-4" aria-label="Paginación de tickets"><ul class="pagination">
+            <c:forEach var="numero" begin="1" end="${totalPaginas}"><li class="page-item ${numero == paginaActual ? 'active' : ''}"><a class="page-link" href="${pageContext.request.contextPath}/tickets?estadoFiltro=${estadoFiltro}&prioridadFiltro=${prioridadFiltro}&pagina=${numero}">${numero}</a></li></c:forEach>
+        </ul></nav>
+    </c:if>
 </main>
 </body>
 </html>

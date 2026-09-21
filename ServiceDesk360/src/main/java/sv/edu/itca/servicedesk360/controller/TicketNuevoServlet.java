@@ -1,16 +1,13 @@
 package sv.edu.itca.servicedesk360.controller;
 
 import java.io.IOException;
-import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
-import sv.edu.itca.servicedesk360.model.Usuario;
 import sv.edu.itca.servicedesk360.service.ServicioTickets;
 
 @WebServlet("/tickets/nuevo")
@@ -23,9 +20,7 @@ public class TicketNuevoServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        HttpSession sesion = request.getSession(false);
-        Usuario usuario = (Usuario) sesion.getAttribute("usuarioAutenticado");
-        request.setAttribute("equipos", servicio().listarEquipos(usuario));
+        cargarCatalogos(request);
         mostrarFormulario(request, response);
     }
 
@@ -33,31 +28,41 @@ public class TicketNuevoServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
-        HttpSession sesion = request.getSession(false);
-        Usuario usuario = (Usuario) sesion.getAttribute("usuarioAutenticado");
         String titulo = request.getParameter("titulo");
         String descripcion = request.getParameter("descripcion");
         String prioridad = request.getParameter("prioridad");
+        Long clienteId = parsearId(request.getParameter("clienteId"));
         Long equipoId = parsearId(request.getParameter("equipoId"));
+        Long categoriaId = parsearId(request.getParameter("categoriaId"));
+        Long tecnicoId = parsearId(request.getParameter("tecnicoId"));
+        String detalleInicial = request.getParameter("detalleInicial");
         try {
-            List<String> errores = servicio().crear(usuario, titulo, descripcion, prioridad, equipoId);
-            if (!errores.isEmpty()) {
-                request.setAttribute("errores", errores);
-                request.setAttribute("tituloAnterior", titulo);
-                request.setAttribute("descripcionAnterior", descripcion);
-                request.setAttribute("prioridadAnterior", prioridad);
-                request.setAttribute("equipoAnterior", equipoId);
-                request.setAttribute("equipos", servicio().listarEquipos(usuario));
-                mostrarFormulario(request, response);
-                return;
-            }
-            response.sendRedirect(request.getContextPath() + "/tickets?estado=creado");
+            long id = servicio().registrarTicketConSeguimiento(valor(clienteId), valor(equipoId),
+                    valor(categoriaId), valor(tecnicoId), titulo, descripcion, prioridad, detalleInicial);
+            response.sendRedirect(request.getContextPath() + "/tickets?estado=creado&id=" + id);
         } catch (RuntimeException ex) {
-            getServletContext().log("Error al crear ticket", ex);
-            request.setAttribute("mensajeError", "No fue posible registrar el ticket.");
-            request.getRequestDispatcher("/WEB-INF/views/error.jsp").forward(request, response);
+            request.setAttribute("errores", java.util.Collections.singletonList(ex.getMessage()));
+            request.setAttribute("tituloAnterior", titulo);
+            request.setAttribute("descripcionAnterior", descripcion);
+            request.setAttribute("detalleInicialAnterior", detalleInicial);
+            request.setAttribute("prioridadAnterior", prioridad);
+            request.setAttribute("clienteAnterior", clienteId);
+            request.setAttribute("equipoAnterior", equipoId);
+            request.setAttribute("categoriaAnterior", categoriaId);
+            request.setAttribute("tecnicoAnterior", tecnicoId);
+            cargarCatalogos(request);
+            mostrarFormulario(request, response);
         }
     }
+
+    private void cargarCatalogos(HttpServletRequest request) {
+        request.setAttribute("clientes", servicio().listarClientes());
+        request.setAttribute("categorias", servicio().listarCategorias());
+        request.setAttribute("tecnicos", servicio().listarTecnicos());
+        request.setAttribute("equipos", servicio().listarEquiposPorCliente(0));
+    }
+
+    private long valor(Long id) { return id == null ? 0 : id; }
 
     private Long parsearId(String valor) {
         if (valor == null || valor.trim().isEmpty()) return null;
