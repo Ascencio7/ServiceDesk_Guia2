@@ -27,10 +27,11 @@
         </div>
     </div>
     <c:if test="${not empty mensajeExito}"><div class="alert alert-success"><c:out value="${mensajeExito}" /></div></c:if>
-    <form method="get" action="${pageContext.request.contextPath}/tickets" class="row g-2 mb-4">
-        <div class="col-md-4"><select name="estadoFiltro" class="form-select"><option value="">Todos los estados</option><option value="ABIERTO" ${estadoFiltro == 'ABIERTO' ? 'selected' : ''}>Abierto</option><option value="EN_PROCESO" ${estadoFiltro == 'EN_PROCESO' ? 'selected' : ''}>En proceso</option><option value="CERRADO" ${estadoFiltro == 'CERRADO' ? 'selected' : ''}>Cerrado</option></select></div>
-        <div class="col-md-4"><select name="prioridadFiltro" class="form-select"><option value="">Todas las prioridades</option><option value="BAJA" ${prioridadFiltro == 'BAJA' ? 'selected' : ''}>Baja</option><option value="MEDIA" ${prioridadFiltro == 'MEDIA' ? 'selected' : ''}>Media</option><option value="ALTA" ${prioridadFiltro == 'ALTA' ? 'selected' : ''}>Alta</option><option value="CRITICA" ${prioridadFiltro == 'CRITICA' ? 'selected' : ''}>Crítica</option></select></div>
-        <div class="col-md-4"><button type="submit" class="btn btn-outline-primary">Filtrar</button></div>
+    <form id="formFiltrosTickets" method="get" action="${pageContext.request.contextPath}/tickets" class="row g-2 mb-4">
+        <div class="col-md-3"><select name="estadoFiltro" class="form-select" onchange="this.form.submit()"><option value="">Todos los estados</option><option value="ABIERTO" ${estadoFiltro == 'ABIERTO' ? 'selected' : ''}>Abierto</option><option value="EN_PROCESO" ${estadoFiltro == 'EN_PROCESO' ? 'selected' : ''}>En proceso</option><option value="CERRADO" ${estadoFiltro == 'CERRADO' ? 'selected' : ''}>Cerrado</option></select></div>
+        <div class="col-md-3"><select name="prioridadFiltro" class="form-select" onchange="this.form.submit()"><option value="">Todas las prioridades</option><option value="BAJA" ${prioridadFiltro == 'BAJA' ? 'selected' : ''}>Baja</option><option value="MEDIA" ${prioridadFiltro == 'MEDIA' ? 'selected' : ''}>Media</option><option value="ALTA" ${prioridadFiltro == 'ALTA' ? 'selected' : ''}>Alta</option><option value="CRITICA" ${prioridadFiltro == 'CRITICA' ? 'selected' : ''}>Crítica</option></select></div>
+        <div class="col-md-3"><button type="submit" class="btn btn-outline-primary">Filtrar</button></div>
+        <div class="col-md-3"><a href="${pageContext.request.contextPath}/tickets" class="btn btn-outline-secondary">Limpiar filtros</a></div>
     </form>
     <div class="card border-0 shadow-sm">
         <div class="table-responsive">

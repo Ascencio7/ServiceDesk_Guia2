@@ -16,6 +16,7 @@ C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk36
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\controller\EquipoNuevoServlet.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\BuscadorTickets.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\model\PruebaModelo.java
+C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\TicketDAO.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\model\CuentaUsuario.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\service\ValidadorRegistro.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\config\AplicacionListener.java
@@ -23,8 +24,11 @@ C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk36
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\controller\CerrarSesionServlet.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\EquipoOpcion.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\DirectorioTicketsEnMemoria.java
+C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\EquipoDAO.java
+C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\model\TicketDetalleDTO.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\service\Autenticador.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\RegistradorCuentas.java
+C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\model\Seguimiento.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\BuscadorCuentas.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\RegistradorTickets.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\persistence\LaboratorioJDBC.java
@@ -35,7 +39,9 @@ C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk36
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\controller\PanelServlet.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\controller\DiagnosticoServlet.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\DirectorioTicketsJDBC.java
+C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\OpcionCatalogo.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\controller\RegistroServlet.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\persistence\PruebaConexion.java
+C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\storage\SeguimientoDAO.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\service\SeguridadClave.java
 C:\Users\Vladimir Ascencio\Downloads\ServiceDesk\ServiceDesk_Guia2\ServiceDesk360\src\main\java\sv\edu\itca\servicedesk360\controller\TicketNuevoServlet.java
