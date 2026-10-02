@@ -1,8 +1,11 @@
 package sv.edu.itca.servicedesk360.model;
 
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
-public class TicketDetalleDTO {
+public class TicketDetalleDTO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private long idTicket;
     private String cliente;
     private String equipo;

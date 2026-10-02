@@ -6,11 +6,13 @@ import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
 
 import sv.edu.itca.servicedesk360.service.Autenticador;
+import sv.edu.itca.servicedesk360.service.ServicioClientes;
 import sv.edu.itca.servicedesk360.service.ServicioAutenticacion;
 import sv.edu.itca.servicedesk360.service.ServicioRegistro;
 import sv.edu.itca.servicedesk360.service.ServicioTickets;
 import sv.edu.itca.servicedesk360.service.ValidadorRegistro;
 import sv.edu.itca.servicedesk360.storage.DirectorioCuentasJDBC;
+import sv.edu.itca.servicedesk360.storage.DirectorioClientesJDBC;
 import sv.edu.itca.servicedesk360.storage.DirectorioTicketsJDBC;
 
 @WebListener
@@ -43,6 +45,8 @@ public class AplicacionListener implements ServletContextListener {
         context.setAttribute("servicioRegistro", servicioRegistro);
         context.setAttribute("autenticador", autenticador);
         context.setAttribute("servicioTickets", servicioTickets);
+        context.setAttribute("servicioClientes",
+                new ServicioClientes(new DirectorioClientesJDBC()));
     }
 
     @Override

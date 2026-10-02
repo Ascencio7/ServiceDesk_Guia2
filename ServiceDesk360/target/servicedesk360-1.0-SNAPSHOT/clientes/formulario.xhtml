@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<f:metadata>
+    <f:viewParam name="clienteId" value="#{clienteBean.clienteId}" />
+    <f:viewAction action="#{clienteBean.prepararFormulario}" onPostback="false" />
+</f:metadata>
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Formulario de cliente | ServiceDesk 360</title>
+    <h:outputStylesheet library="css" name="estilos.css" />
+</h:head>
+<h:body>
+    <header class="encabezado">
+        <h1>#{clienteBean.cliente.idCliente == 0 ? 'Nuevo cliente' : 'Editar cliente'}</h1>
+        <p>Los cambios se guardan mediante el servicio JDBC existente.</p>
+    </header>
+    <main class="contenedor">
+        <h:messages layout="list" />
+        <h:form id="formCliente">
+            <h:panelGrid columns="3">
+                <h:outputLabel for="nombre" value="Nombre:" />
+                <h:inputText id="nombre" value="#{clienteBean.cliente.nombre}"
+                             required="true" maxlength="120" />
+                <h:message for="nombre" />
+
+                <h:outputLabel for="correo" value="Correo:" />
+                <h:inputText id="correo" value="#{clienteBean.cliente.correo}"
+                             type="email" required="true" maxlength="160" />
+                <h:message for="correo" />
+            </h:panelGrid>
+            <h:commandButton value="Guardar" action="#{clienteBean.guardar}" />
+            <h:commandButton value="Cancelar" action="#{clienteBean.volverListado}"
+                             immediate="true" />
+        </h:form>
+    </main>
+</h:body>
+</html>

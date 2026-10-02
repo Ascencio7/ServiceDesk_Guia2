@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+<h:head>
+    <meta charset="UTF-8" />
+    <title>Clientes | ServiceDesk 360</title>
+    <h:outputStylesheet library="css" name="estilos.css" />
+</h:head>
+<h:body>
+    <header class="encabezado">
+        <h1>Clientes</h1>
+        <p>Listado gestionado con JSF y persistido en MySQL</p>
+    </header>
+    <main class="contenedor">
+        <h:messages globalOnly="true" layout="list" />
+        <h:form>
+            <h:commandButton value="Nuevo cliente" action="#{clienteBean.irNuevo}" />
+            <h:link outcome="/index.xhtml" value="Inicio" />
+            <h:panelGroup layout="block" rendered="#{empty clienteBean.clientes}">
+                <p>No existen clientes registrados.</p>
+            </h:panelGroup>
+            <h:dataTable value="#{clienteBean.clientes}" var="c"
+                         rendered="#{not empty clienteBean.clientes}">
+                <h:column>
+                    <f:facet name="header">ID</f:facet>
+                    <h:outputText value="#{c.idCliente}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Nombre</f:facet>
+                    <h:outputText value="#{c.nombre}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Correo</f:facet>
+                    <h:outputText value="#{c.correo}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Estado</f:facet>
+                    <h:outputText value="#{c.activo ? 'Activo' : 'Inactivo'}" />
+                </h:column>
+                <h:column>
+                    <f:facet name="header">Acciones</f:facet>
+                    <h:commandButton value="Editar" action="#{clienteBean.editar(c)}"
+                                     rendered="#{c.activo}" />
+                    <h:commandButton value="Desactivar" action="#{clienteBean.desactivar(c)}"
+                                     rendered="#{c.activo}" />
+                </h:column>
+            </h:dataTable>
+        </h:form>
+    </main>
+</h:body>
+</html>

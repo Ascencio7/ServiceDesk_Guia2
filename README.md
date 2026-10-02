@@ -176,3 +176,27 @@ Para probar la práctica:
 4. Pruebe una relación equipo-cliente inválida y confirme que la operación es rechazada.
 5. Para rollback controlado, interrumpa el servicio entre ambos DAO en un entorno de
   laboratorio y verifique que no aumente la cantidad de tickets.
+
+## Guía 8: JSF y Managed Beans
+
+La capa JSF se ejecuta sobre Java EE 8 (`javax.*`), compatible con Tomcat 9 mediante
+Mojarra 2.3 y Weld CDI. La configuración de JSF está en `pom.xml` y `WEB-INF/web.xml`;
+las vistas y beans JSF conviven con los Servlets JSP anteriores para permitir comparar
+ambos flujos.
+
+Después de iniciar sesión, abra:
+
+* `/clientes/lista.xhtml`: listado, alta, edición y desactivación lógica de clientes.
+* `/clientes/formulario.xhtml`: formulario de alta/edición; se puede abrir desde el listado.
+* `/tickets-jsf/listado.xhtml`: vista de solo lectura basada en `TicketDetalleDTO` y el
+  DAO JDBC existente.
+
+`ClienteBean` y `TicketBean` usan `@Named` y `@ViewScoped`; los servicios JDBC se
+obtienen del registro de aplicación creado por `AplicacionListener`. El bean de
+clientes mantiene estado de presentación, y `DirectorioClientesJDBC` concentra el
+SQL parametrizado. La ruta Servlet `/tickets` sigue disponible para la comparación.
+
+La bitácora, tabla Servlet/JSF, ciclo de vida y matriz de verificación están en
+[`docs/bitacora_guia8.md`](./docs/bitacora_guia8.md). Para confirmar persistencia real,
+ejecute el esquema y datos de prueba de las guías anteriores, despliegue en Tomcat 9
+y complete las pruebas manuales allí descritas.

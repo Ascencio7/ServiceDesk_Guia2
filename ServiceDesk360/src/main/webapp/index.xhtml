@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+<h:head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ServiceDesk 360 | JSF</title>
+    <h:outputStylesheet library="css" name="estilos.css" />
+</h:head>
+<h:body>
+    <header class="encabezado">
+        <h1>ServiceDesk 360</h1>
+        <p>Modulo migrado a JSF 2.3 sobre Java EE 8</p>
+    </header>
+    <main class="contenedor">
+        <h2>Modulos JSF</h2>
+        <p>La capa web usa Managed Beans y conserva la persistencia JDBC existente.</p>
+        <p><h:link outcome="/clientes/lista.xhtml" value="Gestionar clientes" styleClass="boton" /></p>
+        <p><h:link outcome="/tickets-jsf/listado.xhtml" value="Consultar tickets" styleClass="boton" /></p>
+        <p><h:outputLink value="#{request.contextPath}/acceso">Iniciar sesión</h:outputLink></p>
+        <p><h:outputLink value="#{request.contextPath}/tickets">Abrir modulo de tickets Servlet</h:outputLink></p>
+    </main>
+</h:body>
+</html>
