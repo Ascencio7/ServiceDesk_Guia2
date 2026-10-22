@@ -69,7 +69,8 @@ public class DirectorioTicketsJDBC implements BuscadorTickets, RegistradorTicket
 
     @Override
     public List<TicketDetalleDTO> listarDetalle(String estado, String prioridad, int limite, int offset) {
-        String sql = "SELECT t.id_ticket, c.nombre AS cliente, "
+        String sql = "SELECT t.id_ticket, t.id_cliente, t.id_equipo, t.id_categoria, t.id_tecnico, t.descripcion, "
+                + "c.nombre AS cliente, "
                 + "COALESCE(CONCAT(e.codigo_inventario, ' - ', e.marca, ' ', e.modelo), 'Sin equipo') AS equipo, "
                 + "cat.nombre AS categoria, tec.nombre AS tecnico, t.titulo, t.prioridad, t.estado, t.fecha_creacion "
                 + "FROM tickets t JOIN clientes c ON c.id_cliente = t.id_cliente "
@@ -87,6 +88,13 @@ public class DirectorioTicketsJDBC implements BuscadorTickets, RegistradorTicket
                 while (rs.next()) {
                     TicketDetalleDTO ticket = new TicketDetalleDTO();
                     ticket.setIdTicket(rs.getLong("id_ticket"));
+                    ticket.setIdCliente(rs.getLong("id_cliente"));
+                    long eqId = rs.getLong("id_equipo");
+                    ticket.setIdEquipo(rs.wasNull() ? null : eqId);
+                    ticket.setIdCategoria(rs.getLong("id_categoria"));
+                    long tecId = rs.getLong("id_tecnico");
+                    ticket.setIdTecnico(rs.wasNull() ? null : tecId);
+                    ticket.setDescripcion(rs.getString("descripcion"));
                     ticket.setCliente(rs.getString("cliente"));
                     ticket.setEquipo(rs.getString("equipo"));
                     ticket.setCategoria(rs.getString("categoria"));
@@ -103,6 +111,36 @@ public class DirectorioTicketsJDBC implements BuscadorTickets, RegistradorTicket
             return resultado;
         } catch (SQLException ex) {
             throw new IllegalStateException("No fue posible consultar el detalle de tickets.", ex);
+        }
+    }
+
+    @Override
+    public void actualizar(long idTicket, long idCliente, Long idEquipo, long idCategoria,
+            Long idTecnico, String titulo, String descripcion, String prioridad) {
+        String sql = "UPDATE tickets SET id_cliente = ?, id_equipo = ?, id_categoria = ?, "
+                + "id_tecnico = ?, titulo = ?, descripcion = ?, prioridad = ? WHERE id_ticket = ?";
+        try (Connection cn = ConexionBD.abrir(); PreparedStatement ps = cn.prepareStatement(sql)) {
+            ps.setLong(1, idCliente);
+            if (idEquipo != null && idEquipo > 0) {
+                ps.setLong(2, idEquipo);
+            } else {
+                ps.setNull(2, java.sql.Types.BIGINT);
+            }
+            ps.setLong(3, idCategoria);
+            if (idTecnico != null && idTecnico > 0) {
+                ps.setLong(4, idTecnico);
+            } else {
+                ps.setNull(4, java.sql.Types.BIGINT);
+            }
+            ps.setString(5, titulo);
+            ps.setString(6, descripcion);
+            ps.setString(7, prioridad);
+            ps.setLong(8, idTicket);
+            if (ps.executeUpdate() == 0) {
+                throw new IllegalArgumentException("El ticket no existe.");
+            }
+        } catch (SQLException ex) {
+            throw new IllegalStateException("No fue posible actualizar el ticket en MySQL.", ex);
         }
     }
 

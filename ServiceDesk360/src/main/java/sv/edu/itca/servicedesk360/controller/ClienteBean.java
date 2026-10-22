@@ -7,14 +7,21 @@ import java.util.List;
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
-import javax.faces.view.ViewScoped;
-import javax.inject.Named;
+
+
+// import javax.faces.view.ViewScoped;
+// import javax.inject.Named;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+
 import javax.servlet.ServletContext;
 
 import sv.edu.itca.servicedesk360.model.Cliente;
 import sv.edu.itca.servicedesk360.service.ServicioClientes;
 
-@Named("clienteBean")
+@ManagedBean(name = "clienteBean")
 @ViewScoped
 public class ClienteBean implements Serializable {
     private static final long serialVersionUID = 1L;

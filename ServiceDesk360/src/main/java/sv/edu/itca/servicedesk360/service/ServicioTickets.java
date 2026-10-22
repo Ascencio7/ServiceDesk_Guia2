@@ -146,6 +146,38 @@ public class ServicioTickets {
         }
     }
 
+    public void actualizarTicket(long idTicket, long idCliente, Long idEquipo, long idCategoria,
+            Long idTecnico, String titulo, String descripcion, String prioridad) {
+        if (idTicket <= 0) throw new IllegalArgumentException("ID de ticket no valido.");
+        if (idCliente <= 0) throw new IllegalArgumentException("Cliente requerido.");
+        if (idCategoria <= 0) throw new IllegalArgumentException("Categoria requerida.");
+        if (titulo == null || titulo.trim().length() < 5 || titulo.trim().length() > 120) {
+            throw new IllegalArgumentException("El titulo debe contener entre 5 y 120 caracteres.");
+        }
+        if (descripcion == null || descripcion.trim().length() < 10) {
+            throw new IllegalArgumentException("La descripcion debe contener al menos 10 caracteres.");
+        }
+        if (!"BAJA".equalsIgnoreCase(prioridad) && !"MEDIA".equalsIgnoreCase(prioridad)
+                && !"ALTA".equalsIgnoreCase(prioridad) && !"CRITICA".equalsIgnoreCase(prioridad)) {
+            throw new IllegalArgumentException("Prioridad no valida.");
+        }
+        DirectorioTicketsJDBC jdbc = almacenamientoJDBC();
+        if (!jdbc.existeClienteActivo(idCliente)) {
+            throw new IllegalArgumentException("El cliente no existe o esta inactivo.");
+        }
+        if (idEquipo != null && idEquipo > 0 && !jdbc.perteneceACliente(idEquipo, idCliente)) {
+            throw new IllegalArgumentException("El equipo seleccionado no pertenece al cliente.");
+        }
+        if (!jdbc.existeCategoria(idCategoria)) {
+            throw new IllegalArgumentException("La categoria no existe.");
+        }
+        if (idTecnico != null && idTecnico > 0 && !jdbc.existeTecnicoActivo(idTecnico)) {
+            throw new IllegalArgumentException("El tecnico no existe o esta inactivo.");
+        }
+        ((TicketDAO) jdbc).actualizar(idTicket, idCliente, idEquipo, idCategoria, idTecnico,
+                titulo.trim(), descripcion.trim(), prioridad.toUpperCase());
+    }
+
     private void validarRelacionado(long cliente, long equipo, long categoria, long tecnico,
             String titulo, String descripcion, String prioridad, String detalle) {
         if (cliente <= 0) throw new IllegalArgumentException("Cliente requerido.");
